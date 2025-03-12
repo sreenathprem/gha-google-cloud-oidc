@@ -16,7 +16,7 @@ jobs:
       with:
           create_credentials_file: 'true'
           project_id: ${{ secrets.PROJECT_ID }}
-          workload_identity_provider: ${{ secrets.WORKLOAD-IDENTITY-PROVIDER }}
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
     - id: 'gcloud'
       name: 'gcloud'
       run: |-
