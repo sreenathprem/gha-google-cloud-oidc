@@ -29,10 +29,6 @@ resource "google_compute_instance" "vm_instance" {
     }
   }
 
-  metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
-  }
-
   tags = ["web", "dev"]
 }
 
