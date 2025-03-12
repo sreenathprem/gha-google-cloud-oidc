@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket  = var.bucket_name
+    bucket  = "gha-test-project"
     prefix  = "terraform/state"
   }
 }
@@ -45,10 +45,6 @@ variable "region" {
   description = "Google Cloud region"
   type        = string
   default     = "us-central1"
-}
-
-variable "bucket_name" {
-    type = string
 }
 
 output "instance_ip" {
