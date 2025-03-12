@@ -18,7 +18,7 @@ jobs:
         uses: 'google-github-actions/auth@v2.1.8'
         with:
           create_credentials_file: 'true'
-          project_id: ${{ secrets.PROJECT_ID }}
+          service_account: ${{ secrets.GCP_GH_SA }}
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
 
       - name: Set up Terraform
