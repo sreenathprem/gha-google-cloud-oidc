@@ -1,4 +1,4 @@
-name: List services in GCP
+name: Deploy Terraform in GCP
 
 on:
   workflow_dispatch:
@@ -7,18 +7,42 @@ permissions:
   id-token: write
 
 jobs:
-  Get_OIDC_ID_token:
+  terraform:
     runs-on: ubuntu-latest
     steps:
-    - id: 'auth'
-      name: 'Authenticate to GCP'
-      uses: 'google-github-actions/auth@v2.1.8'
-      with:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - id: 'auth'
+        name: 'Authenticate to GCP'
+        uses: 'google-github-actions/auth@v2.1.8'
+        with:
           create_credentials_file: 'true'
           project_id: ${{ secrets.PROJECT_ID }}
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
-    - id: 'gcloud'
-      name: 'gcloud'
-      run: |-
-        gcloud auth login --brief --cred-file="${{ steps.auth.outputs.credentials_file_path }}"
-        gcloud services list
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6  # Use latest stable version
+
+      - name: Initialize Terraform
+        run: terraform init
+        working-directory: terraform  # Change this if your Terraform files are in another folder
+
+      - name: Validate Terraform Configuration
+        run: terraform validate
+        working-directory: terraform
+
+      - name: Terraform Plan
+        run: terraform plan -out=tfplan
+        working-directory: terraform
+        env:
+          GOOGLE_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'  # Apply only on the main branch
+        run: terraform apply -auto-approve tfplan
+        working-directory: terraform
+        env:
+          GOOGLE_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
