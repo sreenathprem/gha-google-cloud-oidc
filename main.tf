@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket  = "gha-test-project"
+    bucket  = "gha-tf-state-bucket"
     prefix  = "terraform/state"
   }
 }
