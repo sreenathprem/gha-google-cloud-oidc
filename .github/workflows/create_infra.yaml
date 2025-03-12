@@ -28,21 +28,17 @@ jobs:
 
       - name: Initialize Terraform
         run: terraform init
-        working-directory: terraform  # Change this if your Terraform files are in another folder
 
       - name: Validate Terraform Configuration
         run: terraform validate
-        working-directory: terraform
 
       - name: Terraform Plan
         run: terraform plan -out=tfplan
-        working-directory: terraform
         env:
           GOOGLE_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'  # Apply only on the main branch
         run: terraform apply -auto-approve tfplan
-        working-directory: terraform
         env:
           GOOGLE_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
